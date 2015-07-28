@@ -45,11 +45,11 @@ int main()
 
             if(start == 1)
             {
-                ins = ptrace(PTRACE_PEEKTEXT, child, regs.eip, NULL);
+                ins = ptrace(PTRACE_PEEKTEXT, child, regs.rip, NULL);
                 //printf("EIP:%lx executed:%lx\n", regs.eip,ins);
             }
-            printf("EIP:%lx instruction: %ld RAX %ld \n", regs.eip, ins, regs.orig_eax);
-            if(regs.orig_eax == SYS_write)
+            printf("EIP:%lx instruction: %ld RAX %ld \n", regs.rip, ins, regs.orig_rax);
+            if(regs.orig_rax == SYS_write)
             {
 
                 printf("call sys_write\n");
@@ -66,3 +66,4 @@ int main()
     return 0;
 
 }
+ 

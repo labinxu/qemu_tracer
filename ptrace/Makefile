@@ -11,7 +11,7 @@ READ_REGS:
 REVERSE_STR:
 	${CXX} -g -Wall -Wextra -o reverse revert_str.cpp
 SINGLE_STEP:
-	${CXX} -m32 -g -Wall -Wextra -o single_step single_step.c
+	${CXX}  -g -Wall -Wextra -o single_step single_step.c
 clean:
 	rm -f reverse part1 part2 read_regs *.o single_step tracer *.out *~
 
