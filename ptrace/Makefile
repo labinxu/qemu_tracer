@@ -1,4 +1,6 @@
-all:PART1 PART2 READ_REGS REVERSE_STR SINGLE_STEP
+#all:PART1 PART2 READ_REGS REVERSE_STR SINGLE_STEP
+all:STEP
+
 CC := gcc
 CXX := g++
 MECHINE_ARCH = -m32
@@ -12,6 +14,8 @@ REVERSE_STR:
 	${CXX} -g -Wall -Wextra -o reverse revert_str.cpp
 SINGLE_STEP:
 	${CXX}  -g -Wall -Wextra -o single_step single_step.c
+STEP:
+	${CC} -Wall -Wextra -o step addbreak.c
 clean:
 	rm -f reverse part1 part2 read_regs *.o single_step tracer *.out *~
 

@@ -6,9 +6,10 @@
 #include <sys/syscall.h>
 #include <sys/reg.h>
 #include <stdio.h>
+#include "debuglib.h"
 
 
-int main()
+int main(int argc, char **argv)
 {
     pid_t child;
     const int long_size = sizeof(long);
@@ -18,6 +19,10 @@ int main()
     {
         printf("child process\n");
         ptrace(PTRACE_TRACEME, 0, NULL, NULL);
+        if(argc ==2)
+        {
+            execl(argv[1], argv[1], NULL);
+        }
         execl("./hello","hello", NULL);
     }
     else
@@ -30,9 +35,6 @@ int main()
         } data;
 
         struct user_regs_struct regs;
-        int start = 0;
-        printf("sys_write %d\n", SYS_write);
-        long ins;
         while(1)
         {
             wait(&status);
@@ -42,26 +44,12 @@ int main()
                 break;
             }
             ptrace(PTRACE_GETREGS, child, NULL, &regs);
-
-            if(start == 1)
-            {
-                ins = ptrace(PTRACE_PEEKTEXT, child, regs.rip, NULL);
-                //printf("EIP:%lx executed:%lx\n", regs.eip,ins);
-            }
-            printf("EIP:%lx instruction: %ld RAX %ld \n", regs.rip, ins, regs.orig_rax);
-            if(regs.orig_rax == SYS_write)
-            {
-
-                printf("call sys_write\n");
-                start = 1;
-                ptrace(PTRACE_SINGLESTEP, child, NULL, NULL);
-            }
-            else
-            {
-                printf("Execute syscall ptrace\n");
-                ptrace(PTRACE_SYSCALL, child, NULL, NULL);
-            }
+            long ins = ptrace(PTRACE_PEEKTEXT, child, regs.rip, NULL);
+            printf("EIP:%lx instruction: %lx RAX %ld \n", regs.rip, ins, regs.orig_rax);
+            getchar();
+            ptrace(PTRACE_SINGLESTEP, child, NULL, NULL);
         }
+        printf("Main prcess exited\n");
     }
     return 0;
 
